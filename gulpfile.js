@@ -2,6 +2,7 @@ var gulp = require('gulp'),
   connect = require('gulp-connect'),
   includer = require('gulp-htmlincluder'),
   less = require('gulp-less'),
+  // sass = require('gulp-sass'),
   spritesmith = require('gulp.spritesmith');
 //	cleanCSS = require('gulp-clean-css'),
 //    htmlmin = require('gulp-htmlmin');
@@ -27,6 +28,13 @@ gulp.task('less', function () {
 	.pipe(connect.reload());
 });
 
+// gulp.task('sass', function () {
+//   return gulp.src('dev/sass/styles.main.sass')
+//     .pipe(sass().on('error', sass.logError))
+//     .pipe(gulp.dest('build/css/'))
+//     .pipe(connect.reload());
+// });
+
 gulp.task('sprite', function () {
   var spriteData = gulp.src('dev/img/*.png').pipe(spritesmith({
     imgName: 'sprite.png',
@@ -39,7 +47,7 @@ gulp.task('move', function () {
 	gulp.src('dev/img/**/*.*')
 	.pipe(gulp.dest('build/img/'))
 	.pipe(connect.reload());
-		
+
 });
 
 //gulp.task('minify-css', function() {
@@ -61,4 +69,3 @@ gulp.task('default', function () {
 	gulp.watch(['dev/**/*.html'], ['htmlIncluder']),
 	gulp.watch(['dev/img/**/*.*'], ['move']);
 });
-
