@@ -64,8 +64,8 @@ gulp.task('move', function () {
 
 
 gulp.task('default', function () {
-  gulp.start('connect', 'less','htmlIncluder','move'),
-	gulp.watch(['dev/less/**/*.less'], ['less']),
+  gulp.start('connect', 'less'/*'sass'*/,'htmlIncluder','move'),
+	gulp.watch(['dev/less/**/*.less'], ['less'/*'sass'*/]), /*also change path dev/sass... in case sass using*/
 	gulp.watch(['dev/**/*.html'], ['htmlIncluder']),
 	gulp.watch(['dev/img/**/*.*'], ['move']);
 });

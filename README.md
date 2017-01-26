@@ -1,4 +1,4 @@
-# Less-template
+# Less/Sass-template
  Ready setup to start working with less/sass.
 
  NOTE:
