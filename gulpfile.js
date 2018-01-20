@@ -1,8 +1,7 @@
 var gulp = require('gulp'),
   connect = require('gulp-connect'),
   includer = require('gulp-htmlincluder'),
-  less = require('gulp-less'),
-  // sass = require('gulp-sass'),
+  sass = require('gulp-sass'),
   spritesmith = require('gulp.spritesmith');
 //	cleanCSS = require('gulp-clean-css'),
 //    htmlmin = require('gulp-htmlmin');
@@ -21,19 +20,12 @@ gulp.task('htmlIncluder', function() {
 		.pipe(connect.reload());
 });
 
-gulp.task('less', function () {
-  return gulp.src('dev/less/styles.main.less')
-    .pipe(less())
-    .pipe(gulp.dest('./build/css'))
-	.pipe(connect.reload());
+gulp.task('sass', function () {
+  return gulp.src('dev/sass/styles.main.sass')
+    .pipe(sass().on('error', sass.logError))
+    .pipe(gulp.dest('build/css/'))
+    .pipe(connect.reload());
 });
-
-// gulp.task('sass', function () {
-//   return gulp.src('dev/sass/styles.main.sass')
-//     .pipe(sass().on('error', sass.logError))
-//     .pipe(gulp.dest('build/css/'))
-//     .pipe(connect.reload());
-// });
 
 gulp.task('sprite', function () {
   var spriteData = gulp.src('dev/img/*.png').pipe(spritesmith({
@@ -57,22 +49,22 @@ gulp.task('movejs', function () {
 
 });
 
-//gulp.task('minify-css', function() {
+// gulp.task('minify-css', function() {
 //  return gulp.src('build/css/*.css')
 //    .pipe(cleanCSS({compatibility: 'ie8'}))
 //    .pipe(gulp.dest('build/css/*.css'));
-//});
-//
-//gulp.task('minify', function() {
+// });
+
+// gulp.task('minify', function() {
 //  return gulp.src('build/*.html')
 //    .pipe(htmlmin({collapseWhitespace: true}))
 //    .pipe(gulp.dest('build'));
-//});
+// });
 
 
 gulp.task('default', function () {
-  gulp.start('connect', 'less'/*'sass'*/,'htmlIncluder','move'),
-	gulp.watch(['dev/less/**/*.less'], ['less'/*'sass'*/]), /*also change path dev/sass... in case sass using*/
+  gulp.start('connect', 'sass','htmlIncluder','move'),
+	gulp.watch(['dev/sass/**/*.sass'], ['sass']), 
 	gulp.watch(['dev/**/*.html'], ['htmlIncluder']),
 	gulp.watch(['dev/img/**/*.*'], ['move']),
   gulp.watch(['dev/js/**/*.js'], ['movejs']);
