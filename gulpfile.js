@@ -2,7 +2,9 @@ var gulp = require('gulp'),
   connect = require('gulp-connect'),
   includer = require('gulp-htmlincluder'),
   sass = require('gulp-sass'),
-  spritesmith = require('gulp.spritesmith');
+  spritesmith = require('gulp.spritesmith'),
+  notify = require("gulp-notify"),
+  plumber = require('gulp-plumber');
 //	cleanCSS = require('gulp-clean-css'),
 //    htmlmin = require('gulp-htmlmin');
 
@@ -21,8 +23,16 @@ gulp.task('htmlIncluder', function() {
 });
 
 gulp.task('sass', function () {
-  return gulp.src('dev/sass/styles.main.sass')
-    .pipe(sass().on('error', sass.logError))
+  return gulp.src('dev/sass/*.sass')
+    .pipe(plumber({
+        errorHandler: notify.onError(function(err) {
+            return {
+                title: 'SASS',
+                message: err.message
+            };
+        })
+    }))
+    .pipe(sass())
     .pipe(gulp.dest('build/css/'))
     .pipe(connect.reload());
 });
@@ -63,8 +73,8 @@ gulp.task('movejs', function () {
 
 
 gulp.task('default', function () {
-  gulp.start('connect', 'sass','htmlIncluder','move'),
-	gulp.watch(['dev/sass/**/*.sass'], ['sass']), 
+  gulp.start('connect', 'sass','htmlIncluder','move', 'movejs'),
+	gulp.watch(['dev/sass/**/*.sass'], ['sass']),
 	gulp.watch(['dev/**/*.html'], ['htmlIncluder']),
 	gulp.watch(['dev/img/**/*.*'], ['move']),
   gulp.watch(['dev/js/**/*.js'], ['movejs']);
