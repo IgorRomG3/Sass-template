@@ -1,5 +1,5 @@
 var gulp = require('gulp'),
-  connect = require('gulp-connect'),
+  browserSync = require('browser-sync').create();
   includer = require('gulp-htmlincluder'),
   sass = require('gulp-sass'),
   spritesmith = require('gulp.spritesmith'),
@@ -8,18 +8,19 @@ var gulp = require('gulp'),
 //	cleanCSS = require('gulp-clean-css'),
 //    htmlmin = require('gulp-htmlmin');
 
-gulp.task('connect', function() {
-  connect.server({
-    root: 'build',
-    livereload: true
-  });
+gulp.task('browser-sync', ['sass'],  function() {
+    browserSync.init({
+        server: {
+            baseDir: "./build"
+        }
+    });
 });
 
 gulp.task('htmlIncluder', function() {
     gulp.src('dev/**/*.html')
     	.pipe(includer())
         .pipe(gulp.dest('build/'))
-		.pipe(connect.reload());
+        .pipe(browserSync.reload({stream: true}));
 });
 
 gulp.task('sass', function () {
@@ -34,7 +35,7 @@ gulp.task('sass', function () {
     }))
     .pipe(sass())
     .pipe(gulp.dest('build/css/'))
-    .pipe(connect.reload());
+    .pipe(browserSync.reload({stream: true}));
 });
 
 gulp.task('sprite', function () {
@@ -48,14 +49,14 @@ gulp.task('sprite', function () {
 gulp.task('move', function () {
 	gulp.src('dev/img/**/*.*')
 	.pipe(gulp.dest('build/img/'))
-	.pipe(connect.reload());
+  .pipe(browserSync.reload({stream: true}));
 
 });
 
 gulp.task('movejs', function () {
 	gulp.src('dev/js/**/*.js')
 	.pipe(gulp.dest('build/js/'))
-	.pipe(connect.reload());
+  .pipe(browserSync.reload({stream: true}));
 
 });
 
@@ -73,7 +74,7 @@ gulp.task('movejs', function () {
 
 
 gulp.task('default', function () {
-  gulp.start('connect', 'sass','htmlIncluder','move', 'movejs'),
+  gulp.start('browser-sync', 'sass','htmlIncluder','move', 'movejs'),
 	gulp.watch(['dev/sass/**/*.sass'], ['sass']),
 	gulp.watch(['dev/**/*.html'], ['htmlIncluder']),
 	gulp.watch(['dev/img/**/*.*'], ['move']),
