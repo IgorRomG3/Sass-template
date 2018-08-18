@@ -4,10 +4,12 @@ var gulp = require('gulp'),
   sass = require('gulp-sass'),
   spritesmith = require('gulp.spritesmith'),
   notify = require("gulp-notify"),
-  autoprefixer = require('gulp-autoprefixer'),
-  plumber = require('gulp-plumber');
-//	cleanCSS = require('gulp-clean-css'),
-//    htmlmin = require('gulp-htmlmin');
+  autoprefixer = require('autoprefixer'),
+  plumber = require('gulp-plumber'),
+  htmlmin = require('gulp-htmlmin'),
+	cleanCSS = require('gulp-clean-css'),
+  uglify = require('gulp-uglify'),
+  postcss = require('gulp-postcss');
 
 gulp.task('browser-sync', ['sass'],  function() {
     browserSync.init({
@@ -20,11 +22,15 @@ gulp.task('browser-sync', ['sass'],  function() {
 gulp.task('htmlIncluder', function() {
     gulp.src('dev/**/*.html')
     	.pipe(includer())
-        .pipe(gulp.dest('build/'))
-        .pipe(browserSync.reload({stream: true}));
+      .pipe(htmlmin({collapseWhitespace: true}))
+      .pipe(gulp.dest('build/'))
+      .pipe(browserSync.reload({stream: true}));
 });
 
 gulp.task('sass', function () {
+  var plugins = [
+        autoprefixer({browsers: ['last 2 version']}),
+    ];
   return gulp.src('dev/scss/*.scss')
     .pipe(plumber({
         errorHandler: notify.onError(function(err) {
@@ -35,7 +41,8 @@ gulp.task('sass', function () {
         })
     }))
     .pipe(sass())
-    .pipe(autoprefixer())
+    .pipe(postcss(plugins))
+    .pipe(cleanCSS({compatibility: 'ie8'}))
     .pipe(gulp.dest('build/css/'))
     .pipe(browserSync.reload({stream: true}));
 });
@@ -57,23 +64,11 @@ gulp.task('move', function () {
 
 gulp.task('movejs', function () {
 	gulp.src('dev/js/**/*.js')
+  .pipe(uglify())
 	.pipe(gulp.dest('build/js/'))
   .pipe(browserSync.reload({stream: true}));
 
 });
-
-// gulp.task('minify-css', function() {
-//  return gulp.src('build/css/*.css')
-//    .pipe(cleanCSS({compatibility: 'ie8'}))
-//    .pipe(gulp.dest('build/css/*.css'));
-// });
-
-// gulp.task('minify', function() {
-//  return gulp.src('build/*.html')
-//    .pipe(htmlmin({collapseWhitespace: true}))
-//    .pipe(gulp.dest('build'));
-// });
-
 
 gulp.task('default', function () {
   gulp.start('browser-sync', 'sass','htmlIncluder','move', 'movejs'),
