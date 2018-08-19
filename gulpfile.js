@@ -7,9 +7,9 @@ var gulp = require('gulp'),
   autoprefixer = require('autoprefixer'),
   plumber = require('gulp-plumber'),
   htmlmin = require('gulp-htmlmin'),
-	cleanCSS = require('gulp-clean-css'),
   uglify = require('gulp-uglify'),
-  postcss = require('gulp-postcss');
+  postcss = require('gulp-postcss')
+  cssnano = require('cssnano');
 
 gulp.task('browser-sync', ['sass'],  function() {
     browserSync.init({
@@ -30,6 +30,7 @@ gulp.task('htmlIncluder', function() {
 gulp.task('sass', function () {
   var plugins = [
         autoprefixer({browsers: ['last 2 version']}),
+        cssnano()
     ];
   return gulp.src('dev/scss/*.scss')
     .pipe(plumber({
@@ -42,7 +43,6 @@ gulp.task('sass', function () {
     }))
     .pipe(sass())
     .pipe(postcss(plugins))
-    .pipe(cleanCSS({compatibility: 'ie8'}))
     .pipe(gulp.dest('build/css/'))
     .pipe(browserSync.reload({stream: true}));
 });
