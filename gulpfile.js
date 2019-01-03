@@ -1,6 +1,5 @@
 var gulp = require('gulp'),
   browserSync = require('browser-sync').create();
-  includer = require('gulp-htmlincluder'),
   sass = require('gulp-sass'),
   spritesmith = require('gulp.spritesmith'),
   notify = require("gulp-notify"),
@@ -14,25 +13,17 @@ var gulp = require('gulp'),
 gulp.task('browser-sync', ['sass'],  function() {
     browserSync.init({
         server: {
-            baseDir: "./build"
+            baseDir: "./app"
         }
     });
 });
 
-gulp.task('htmlIncluder', function() {
-    gulp.src('dev/**/*.html')
-    	.pipe(includer())
-      .pipe(htmlmin({collapseWhitespace: true}))
-      .pipe(gulp.dest('build/'))
-      .pipe(browserSync.reload({stream: true}));
-});
-
 gulp.task('sass', function () {
   var plugins = [
-        autoprefixer({browsers: ['last 2 version']}),
+        autoprefixer({browsers: ['last 15 versions', '> 1%', 'ie 10']}),
         cssnano()
     ];
-  return gulp.src('dev/scss/*.scss')
+  return gulp.src('app/scss/style.scss')
     .pipe(plumber({
         errorHandler: notify.onError(function(err) {
             return {
@@ -41,39 +32,26 @@ gulp.task('sass', function () {
             };
         })
     }))
-    .pipe(sass())
+    .pipe(sass({
+      includePaths: require('node-bourbon').includePaths
+    }))
     .pipe(postcss(plugins))
-    .pipe(gulp.dest('build/css/'))
+    .pipe(gulp.dest('app/css/'))
     .pipe(browserSync.reload({stream: true}));
 });
 
 gulp.task('sprite', function () {
-  var spriteData = gulp.src('dev/img/*.png').pipe(spritesmith({
+  var spriteData = gulp.src('app/img/**/*').pipe(spritesmith({
     imgName: 'sprite.png',
     cssName: 'sprite.css'
   }));
-  return spriteData.pipe(gulp.dest('dev/img/sprite/'));
-});
-
-gulp.task('move', function () {
-	gulp.src('dev/img/**/*.*')
-	.pipe(gulp.dest('build/img/'))
-  .pipe(browserSync.reload({stream: true}));
-
-});
-
-gulp.task('movejs', function () {
-	gulp.src('dev/js/**/*.js')
-  .pipe(uglify())
-	.pipe(gulp.dest('build/js/'))
-  .pipe(browserSync.reload({stream: true}));
-
+  return spriteData.pipe(gulp.dest('app/img/sprites/'));
 });
 
 gulp.task('default', function () {
-  gulp.start('browser-sync', 'sass','htmlIncluder','move', 'movejs'),
-	gulp.watch(['dev/scss/**/*.scss'], ['sass']),
-	gulp.watch(['dev/**/*.html'], ['htmlIncluder']),
-	gulp.watch(['dev/img/**/*.*'], ['move']),
-  gulp.watch(['dev/js/**/*.js'], ['movejs']);
+  gulp.start('browser-sync', 'sass');
+	gulp.watch(['app/scss/style.scss'], ['sass']);
+  gulp.watch('app/*.html', browserSync.reload);
+	gulp.watch('app/js/**/*.js', browserSync.reload);
+  gulp.watch('app/img/**/*', browserSync.reload);
 });

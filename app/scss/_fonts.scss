@@ -1,0 +1,5 @@
+@import "bourbon";
+
+@include font-face("AGopt", "../fonts/agopt/agopt-normal", normal, $file-formats: eot woff ttf);
+@include font-face("AGopt", "../fonts/agopt/agopt-bold", bold, $file-formats: eot woff ttf);
+@include font-face("Helvetica Light", "../fonts/helvetica/HelveticaLightRegular", 300, $file-formats: eot woff ttf);
