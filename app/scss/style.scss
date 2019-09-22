@@ -1,7 +1,11 @@
 @import "bourbon";
+@import "utilities/_functions";
+@import "utilities/_mixins";
+@import "utilities/_var";
 @import "_fonts";
-@import "_functions";
-@import "_var";
+@import "_base.scss";
+@import "layout/_layout-example";
+@import "module/_module-example";
 
 h1 {
   color: $mainColor;

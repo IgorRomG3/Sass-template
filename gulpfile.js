@@ -23,7 +23,7 @@ gulp.task('sass', function () {
         autoprefixer({browsers: ['last 15 versions', '> 1%', 'ie 10']}),
         cssnano()
     ];
-  return gulp.src('app/scss/style.scss')
+  return gulp.src('app/scss/**/.scss')
     .pipe(plumber({
         errorHandler: notify.onError(function(err) {
             return {
@@ -50,7 +50,7 @@ gulp.task('sprite', function () {
 
 gulp.task('default', function () {
   gulp.start('browser-sync', 'sass');
-	gulp.watch(['app/scss/style.scss'], ['sass']);
+	gulp.watch(['app/scss/**/*.scss'], ['sass']);
   gulp.watch('app/*.html', browserSync.reload);
 	gulp.watch('app/js/**/*.js', browserSync.reload);
   gulp.watch('app/img/**/*', browserSync.reload);
