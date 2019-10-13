@@ -1,0 +1,13 @@
+extends ../layouts/layout
+
+block head
+    - var title ="Pug Title"
+
+block main
+    ul
+        each val in numbers
+            li
+                img(src=val.img.src, alt=val.img.alt)
+                p!= val.text
+    p.class
+      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Iure cum officia, voluptates ipsum iusto labore, similique, modi reprehenderit rerum tenetur sit id et soluta! Accusamus #[a(href="#") link hello friend], nemo molestiae non cum!

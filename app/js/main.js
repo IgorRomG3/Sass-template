@@ -4,6 +4,6 @@
 	});
 
   function initPage() {
-    $('#jsGallery').slick();
+    console.log('main.js');
   }
 })();

@@ -1,0 +1,14 @@
+{
+    "numbers":[{
+        "text":"blabla",
+        "img":{
+            "src":"img/igor.png",
+            "alt":"igor"}
+    },
+    {
+       "text":"albalb <a href='#'>link<a/>",
+        "img":{
+            "src":"img/vika.png",
+            "alt":"vika"}
+    }]
+}
