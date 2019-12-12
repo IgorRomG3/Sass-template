@@ -23,7 +23,7 @@ gulp.task('browser-sync', ['sass', 'pug'], function() {
 
 gulp.task('sass', function () {
   var plugins = [
-        autoprefixer({browsers: ['last 15 versions', '> 1%', 'ie 10']}),
+        autoprefixer(),
         cssnano()
     ];
   return gulp.src('app/scss/**/.scss')
