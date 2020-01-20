@@ -1,0 +1,21 @@
+extends ../layouts/layout
+include ../partials/bg/bg
+
+block variables
+    - var title ="Pug Title"
+
+append head
+  link(rel="stylesheet" href="css/home.css")    
+
+block main
+    ul
+        each val in numbers
+            li
+                img(src=val.img.src, alt=val.img.alt)
+                p!= val.text
+    p.
+      Мопсы были привезены из Китая в Европу в XVI веке и были популярны в Западной Европе и Нидерландах. В Соединённом Королевстве в XIX веке Королева Виктория развила страсть к мопсам, которую она передала другим членам королевской семьи.
+    +bg('https://thehappypuppysite.com/wp-content/uploads/2019/04/How-Long-Do-Pugs-Live-long.jpg', 'main-bg', true)
+
+append scripts
+  script(src='js/main.js')  

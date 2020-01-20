@@ -26,11 +26,11 @@ gulp.task('sass', function () {
         autoprefixer(),
         cssnano()
     ];
-  return gulp.src('app/scss/**/.scss')
+  return gulp.src('app/sass/**/*.sass')
     .pipe(plumber({
         errorHandler: notify.onError(function(err) {
             return {
-                title: 'SCSS',
+                title: 'SASS',
                 message: err.message
             };
         })
@@ -44,7 +44,7 @@ gulp.task('sass', function () {
 });
 
 gulp.task('pug', function() {
-  return gulp.src('app/templates/pages/*.pug')
+  return gulp.src('app/templates/views/*.pug')
        .pipe(plumber({
            errorHandler: notify.onError(function(err) {
                return {
@@ -73,7 +73,7 @@ gulp.task('sprite', function () {
 
 gulp.task('default', function () {
   gulp.start('browser-sync', 'sass');
-	gulp.watch(['app/scss/**/*.scss'], ['sass']);
+	gulp.watch(['app/sass/**/*.sass'], ['sass']);
   gulp.watch('app/*.html', browserSync.reload);
   gulp.watch(['app/templates/**/*.pug'], ['pug']);
 	gulp.watch('app/js/**/*.js', browserSync.reload);
