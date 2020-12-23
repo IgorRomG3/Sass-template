@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "gulp": "cross-env NODE_ENV=development gulp",
+    "gulp-prod": "cross-env NODE_ENV=production gulp"
   },
   "browserslist": [
     "last 15 version",
@@ -16,18 +17,17 @@
   "devDependencies": {
     "autoprefixer": "^9.1.1",
     "browser-sync": "^2.23.6",
+    "cross-env": "^7.0.3",
     "cssnano": "^4.0.5",
     "gulp": "^3.9.1",
     "gulp-data": "^1.3.1",
     "gulp-htmlincluder": "^0.1.0",
-    "gulp-htmlmin": "^3.0.0",
     "gulp-notify": "^3.2.0",
     "gulp-plumber": "^1.2.0",
     "gulp-postcss": "^8.0.0",
     "gulp-pug": "^4.0.1",
     "gulp-sass": "^3.1.0",
-    "gulp-uglify": "^3.0.1",
-    "gulp.spritesmith": "^6.2.1",
+    "gulp-w3c-html-validator": "^2.0.1",
     "node-bourbon": "^4.2.8"
   }
 }
