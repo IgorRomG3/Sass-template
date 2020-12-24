@@ -1,4 +1,5 @@
-var gulp = require('gulp'),
+const { src, dest, watch, series, parallel } = require('gulp'),
+  // gulp = require('gulp'),
   browserSync = require('browser-sync').create(),
   htmlValidator = require('gulp-w3c-html-validator'),
   sass = require('gulp-sass'),
@@ -14,15 +15,21 @@ var gulp = require('gulp'),
 const isDev = process.env.NODE_ENV === 'development'
 const isProd = !isDev
 
-gulp.task('browser-sync', ['sass', 'pug'], function() {
-    browserSync.init({
-        server: {
-            baseDir: "./app"
-        }
-    });
-});
+function initServer() {
+  browserSync.init({
+    server: {
+        baseDir: "./app"
+      }
+  });
 
-gulp.task('sass', function () {
+	watch(['app/sass/**/*.sass'], styles);
+  watch('app/*.html', htmlValidate);
+  watch(['app/templates/**/*.pug'], html);
+	watch('app/scripts/**/*.js',).on('change', browserSync.reload);
+  watch('app/images/**/*').on('change', browserSync.reload);
+}
+
+function styles() {
   var plugins = [
     autoprefixer()
   ];
@@ -31,7 +38,7 @@ gulp.task('sass', function () {
     plugins.push(cssnano());
   }
 
-  return gulp.src('app/sass/**/*.sass')
+  return src('app/sass/**/*.sass')
     .pipe(plumber({
         errorHandler: notify.onError(function(err) {
             return {
@@ -44,12 +51,12 @@ gulp.task('sass', function () {
       includePaths: require('node-bourbon').includePaths
     }))
     .pipe(postcss(plugins))
-    .pipe(gulp.dest('app/css/'))
+    .pipe(dest('app/styles/'))
     .pipe(browserSync.reload({stream: true}));
-});
+}
 
-gulp.task('pug', function() {
-  return gulp.src('app/templates/views/*.pug')
+function html() {
+  return src('app/templates/views/*.pug')
        .pipe(plumber({
            errorHandler: notify.onError(function(err) {
                return {
@@ -64,21 +71,48 @@ gulp.task('pug', function() {
       .pipe(pug({
         "pretty": isDev /* for desable html minify*/
       }))
-      .pipe(gulp.dest('app/'))
+      .pipe(dest('app/'))
       .pipe(browserSync.reload({stream: true}));
-});
+}
 
-gulp.task('validateHtml', function() {
-  return gulp.src('app/*.html')
+function htmlValidate() {
+  return src('app/*.html')
          .pipe(htmlValidator())
          .pipe(browserSync.reload({stream: true}));
-});
+}
 
-gulp.task('default', function () {
-  gulp.start('browser-sync', 'sass');
-	gulp.watch(['app/sass/**/*.sass'], ['sass']);
-  gulp.watch('app/*.html', ['validateHtml']);
-  gulp.watch(['app/templates/**/*.pug'], ['pug']);
-	gulp.watch('app/js/**/*.js', browserSync.reload);
-  gulp.watch('app/img/**/*', browserSync.reload);
-});
+function moveHTML() {
+  return src('app/*.html')
+  .pipe(dest('dist'));
+}
+
+function moveStyles() {
+  return src('app/styles/**/*.css')
+  .pipe(dest('dist/styles/'));
+}
+
+function moveScripts() {
+  return src('app/scripts/**/*.js')
+  .pipe(dest('dist/scripts/'));
+}
+
+function moveImages() {
+  return src('app/images/**/*')
+  .pipe(dest('dist/images/'));
+}
+
+function moveLibs() {
+  return src('app/libs/**/*')
+  .pipe(dest('dist/libs/'));
+}
+
+function moveFonts() {
+  return src('app/fonts/**/*')
+  .pipe(dest('dist/fonts/'));
+}
+
+let serve = series(parallel(styles, html, htmlValidate), initServer);
+let build = parallel(moveHTML, moveStyles, moveScripts, moveImages, moveLibs, moveFonts)
+
+exports.default = serve;
+exports.build = build;
