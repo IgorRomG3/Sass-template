@@ -2,11 +2,13 @@ const { src, dest, watch, series, parallel } = require('gulp'),
   // gulp = require('gulp'),
   browserSync = require('browser-sync').create(),
   htmlValidator = require('gulp-w3c-html-validator'),
+  uglify = require('gulp-uglify'),
+  gulpif = require('gulp-if'),
   sass = require('gulp-sass'),
   notify = require("gulp-notify"),
   autoprefixer = require('autoprefixer'),
   plumber = require('gulp-plumber'),
-  postcss = require('gulp-postcss')
+  postcss = require('gulp-postcss'),
   cssnano = require('cssnano'),
   pug = require('gulp-pug'),
   data = require('gulp-data'),
@@ -51,7 +53,7 @@ function styles() {
       includePaths: require('node-bourbon').includePaths
     }))
     .pipe(postcss(plugins))
-    .pipe(dest('app/styles/'))
+    .pipe(gulpif(isDev, dest('app/styles/'), dest('dist/styles/')))
     .pipe(browserSync.reload({stream: true}));
 }
 
@@ -71,7 +73,7 @@ function html() {
       .pipe(pug({
         "pretty": isDev /* for desable html minify*/
       }))
-      .pipe(dest('app/'))
+      .pipe(gulpif(isDev, dest('app/'), dest('dist/')))
       .pipe(browserSync.reload({stream: true}));
 }
 
@@ -81,18 +83,9 @@ function htmlValidate() {
          .pipe(browserSync.reload({stream: true}));
 }
 
-function moveHTML() {
-  return src('app/*.html')
-  .pipe(dest('dist'));
-}
-
-function moveStyles() {
-  return src('app/styles/**/*.css')
-  .pipe(dest('dist/styles/'));
-}
-
 function moveScripts() {
   return src('app/scripts/**/*.js')
+  .pipe(uglify())
   .pipe(dest('dist/scripts/'));
 }
 
@@ -112,7 +105,7 @@ function moveFonts() {
 }
 
 let serve = series(parallel(styles, html, htmlValidate), initServer);
-let build = parallel(moveHTML, moveStyles, moveScripts, moveImages, moveLibs, moveFonts)
+let build = parallel(styles, html, moveScripts, moveImages, moveLibs, moveFonts)
 
-exports.default = serve;
+exports.serve = serve;
 exports.build = build;
