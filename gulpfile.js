@@ -1,10 +1,11 @@
 const { src, dest, watch, series, parallel } = require('gulp'),
-  // gulp = require('gulp'),
   browserSync = require('browser-sync').create(),
   htmlValidator = require('gulp-w3c-html-validator'),
   uglify = require('gulp-uglify'),
   gulpif = require('gulp-if'),
   sass = require('gulp-sass'),
+  sourcemaps = require('gulp-sourcemaps'),
+  imagemin = require('gulp-imagemin'),
   notify = require("gulp-notify"),
   autoprefixer = require('autoprefixer'),
   plumber = require('gulp-plumber'),
@@ -41,6 +42,7 @@ function styles() {
   }
 
   return src('app/sass/**/*.sass')
+    .pipe(gulpif(isDev, sourcemaps.init()))
     .pipe(plumber({
         errorHandler: notify.onError(function(err) {
             return {
@@ -53,6 +55,7 @@ function styles() {
       includePaths: require('node-bourbon').includePaths
     }))
     .pipe(postcss(plugins))
+    .pipe(gulpif(isDev, sourcemaps.write()))
     .pipe(gulpif(isDev, dest('app/styles/'), dest('dist/styles/')))
     .pipe(browserSync.reload({stream: true}));
 }
@@ -91,6 +94,7 @@ function moveScripts() {
 
 function moveImages() {
   return src('app/images/**/*')
+  .pipe(imagemin())
   .pipe(dest('dist/images/'));
 }
 
