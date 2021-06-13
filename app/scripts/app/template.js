@@ -1,3 +1,5 @@
+//template.js
+
 (function() {
   $(document).ready(function() {
     innerPage();

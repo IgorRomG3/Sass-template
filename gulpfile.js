@@ -12,6 +12,8 @@ const { src, dest, watch, series, parallel } = require('gulp'),
   postcss = require('gulp-postcss'),
   cssnano = require('cssnano'),
   pug = require('gulp-pug'),
+  order = require("gulp-order"),
+  concat = require('gulp-concat'),
   data = require('gulp-data'),
   fs = require('fs');
 
@@ -28,7 +30,7 @@ function initServer() {
 	watch(['app/sass/**/*.sass'], styles);
   watch('app/*.html', htmlValidate);
   watch(['app/templates/**/*.pug'], html);
-	watch('app/scripts/**/*.js',).on('change', browserSync.reload);
+	watch('app/scripts/**/*.js', scripts);
   watch('app/images/**/*').on('change', browserSync.reload);
 }
 
@@ -60,6 +62,23 @@ function styles() {
     .pipe(browserSync.reload({stream: true}));
 }
 
+function scripts() {
+  fs.truncate('app/scripts/bundle.min.js', 0, function() {
+    console.log('bundle.min.js removed');
+  });
+
+  return src("app/scripts/**/*.js")
+    .pipe(order([
+      "vendor/jquery/jquery.min.js",
+      "vendor/**/*.js",
+      "app/**/template.js",
+      "app/**/*.js"
+    ]))
+    .pipe(concat("bundle.min.js"))
+    .pipe(dest("app/js"))
+    .pipe(browserSync.reload({stream: true}));
+}
+
 function html() {
   return src('app/templates/views/*.pug')
        .pipe(plumber({
@@ -87,9 +106,9 @@ function htmlValidate() {
 }
 
 function moveScripts() {
-  return src('app/scripts/**/*.js')
+  return src('app/js/**/*.js')
   .pipe(uglify())
-  .pipe(dest('dist/scripts/'));
+  .pipe(dest('dist/js/'));
 }
 
 function moveImages() {
@@ -98,18 +117,13 @@ function moveImages() {
   .pipe(dest('dist/images/'));
 }
 
-function moveLibs() {
-  return src('app/libs/**/*')
-  .pipe(dest('dist/libs/'));
-}
-
 function moveFonts() {
   return src('app/fonts/**/*')
   .pipe(dest('dist/fonts/'));
 }
 
-let serve = series(parallel(styles, html, htmlValidate), initServer);
-let build = parallel(styles, html, moveScripts, moveImages, moveLibs, moveFonts)
+let serve = series(parallel(styles, html, scripts, htmlValidate), initServer);
+let dist = parallel(styles, html, moveScripts, moveImages, moveFonts)
 
 exports.serve = serve;
-exports.build = build;
+exports.dist = dist;

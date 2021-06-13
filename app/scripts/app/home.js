@@ -1,9 +1,11 @@
+//home.js
+
 (function () {
 	$(document).ready(function(){
 		initPage();
 	});
 
   function initPage() {
-    console.log('main.js');
+    console.log('home.js');
   }
 })();
