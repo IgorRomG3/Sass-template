@@ -1,4 +1,7 @@
 node_modules/
-app/css/
+app/styles/
+app/js/
 app/*.html
 dist/
+.DS_Store
+.idea
