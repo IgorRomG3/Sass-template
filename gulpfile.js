@@ -27,10 +27,10 @@ function initServer() {
       }
   });
 
-	watch(['app/sass/**/*.sass'], styles);
+  watch(['app/sass/**/*.s[a|c]ss'], styles);
   watch('app/*.html', htmlValidate);
   watch(['app/templates/**/*.pug'], html);
-	watch('app/scripts/**/*.js', scripts);
+  watch('app/scripts/**/*.js', scripts);
   watch('app/images/**/*').on('change', browserSync.reload);
 }
 
@@ -43,7 +43,7 @@ function styles() {
     plugins.push(cssnano());
   }
 
-  return src('app/sass/**/*.sass')
+  return src('app/sass/**/*.s[a|c]ss')
     .pipe(gulpif(isDev, sourcemaps.init()))
     .pipe(plumber({
         errorHandler: notify.onError(function(err) {
