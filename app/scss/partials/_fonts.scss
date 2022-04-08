@@ -1,5 +1,19 @@
-@import "bourbon";
+@font-face {
+  font-family: "AGopt";
+  font-style: normal;
+  font-weight: normal;
+  src: url("../fonts/agopt/agopt-normal.eot?#iefix") format("embedded-opentype"), url("../fonts/agopt/agopt-normal.woff") format("woff"), url("../fonts/agopt/agopt-normal.ttf") format("truetype"); }
 
-@include font-face("AGopt", "../fonts/agopt/agopt-normal", normal, $file-formats: eot woff ttf);
-@include font-face("AGopt", "../fonts/agopt/agopt-bold", bold, $file-formats: eot woff ttf);
-@include font-face("Helvetica Light", "../fonts/helvetica/HelveticaLightRegular", 300, $file-formats: eot woff ttf);
+@font-face {
+  font-family: "AGopt";
+  font-style: normal;
+  font-weight: bold;
+  src: url("../fonts/agopt/agopt-bold.eot?#iefix") format("embedded-opentype"), url("../fonts/agopt/agopt-bold.woff") format("woff"), url("../fonts/agopt/agopt-bold.ttf") format("truetype"); }
+
+@font-face {
+  font-family: "Helvetica Light";
+  font-style: normal;
+  font-weight: 300;
+  src: url("../fonts/helvetica/HelveticaLightRegular.eot?#iefix") format("embedded-opentype"), url("../fonts/helvetica/HelveticaLightRegular.woff") format("woff"), url("../fonts/helvetica/HelveticaLightRegular.ttf") format("truetype"); 
+    
+}
