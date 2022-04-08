@@ -1,9 +1,8 @@
 const { src, dest, watch, series, parallel } = require('gulp'),
   browserSync = require('browser-sync').create(),
-  htmlValidator = require('gulp-w3c-html-validator'),
   uglify = require('gulp-uglify'),
   gulpif = require('gulp-if'),
-  sass = require('gulp-sass'),
+  scss = require('gulp-sass'),
   sourcemaps = require('gulp-sourcemaps'),
   imagemin = require('gulp-imagemin'),
   notify = require("gulp-notify"),
@@ -27,8 +26,7 @@ function initServer() {
       }
   });
 
-	watch(['app/sass/**/*.sass'], styles);
-  watch('app/*.html', htmlValidate);
+	watch(['app/scss/**/*.scss'], styles);
   watch(['app/templates/**/*.pug'], html);
 	watch('app/scripts/**/*.js', scripts);
   watch('app/images/**/*').on('change', browserSync.reload);
@@ -43,17 +41,17 @@ function styles() {
     plugins.push(cssnano());
   }
 
-  return src('app/sass/**/*.sass')
+  return src('app/scss/**/*.scss')
     .pipe(gulpif(isDev, sourcemaps.init()))
     .pipe(plumber({
         errorHandler: notify.onError(function(err) {
             return {
-                title: 'SASS',
+                title: 'scss',
                 message: err.message
             };
         })
     }))
-    .pipe(sass({
+    .pipe(scss({
       includePaths: require('node-bourbon').includePaths
     }))
     .pipe(postcss(plugins))
@@ -99,12 +97,6 @@ function html() {
       .pipe(browserSync.reload({stream: true}));
 }
 
-function htmlValidate() {
-  return src('app/*.html')
-         .pipe(htmlValidator())
-         .pipe(browserSync.reload({stream: true}));
-}
-
 function moveScripts() {
   return src('app/js/**/*.js')
   .pipe(uglify())
@@ -122,7 +114,7 @@ function moveFonts() {
   .pipe(dest('dist/fonts/'));
 }
 
-let serve = series(parallel(styles, html, scripts, htmlValidate), initServer);
+let serve = series(parallel(styles, html, scripts), initServer);
 let dist = parallel(styles, html, moveScripts, moveImages, moveFonts)
 
 exports.serve = serve;
