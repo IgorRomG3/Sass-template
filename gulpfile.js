@@ -51,6 +51,7 @@ function styles() {
             };
         })
     }))
+    .pipe(scss())
     .pipe(postcss(plugins))
     .pipe(gulpif(isDev, sourcemaps.write()))
     .pipe(gulpif(isDev, dest('app/styles/'), dest('dist/styles/')))
