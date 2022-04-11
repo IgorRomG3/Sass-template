@@ -1,8 +1,8 @@
-@function vw($px, $screenWeedth: 1280) {  //пример width: vw(80) - результат width:6.25vw
+@function vw($px, $screenWeedth: 1280) {
   @return $px * 100 / $screenWeedth + vw;
 }
 
-@function vh($px, $screenHeight: 720) {  //пример width: vw(80) - результат width:6.25vw
+@function vh($px, $screenHeight: 720) {
   @return $px * 100 / $screenHeight + vh;
 }
 

@@ -51,9 +51,6 @@ function styles() {
             };
         })
     }))
-    .pipe(scss({
-      includePaths: require('node-bourbon').includePaths
-    }))
     .pipe(postcss(plugins))
     .pipe(gulpif(isDev, sourcemaps.write()))
     .pipe(gulpif(isDev, dest('app/styles/'), dest('dist/styles/')))
