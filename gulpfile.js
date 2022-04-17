@@ -2,9 +2,8 @@ const { src, dest, watch, series, parallel } = require('gulp'),
   browserSync = require('browser-sync').create(),
   uglify = require('gulp-uglify'),
   gulpif = require('gulp-if'),
-  scss = require('gulp-sass'),
+  scss = require('gulp-sass')(require('sass')),
   sourcemaps = require('gulp-sourcemaps'),
-  imagemin = require('gulp-imagemin'),
   notify = require("gulp-notify"),
   autoprefixer = require('autoprefixer'),
   plumber = require('gulp-plumber'),
@@ -89,7 +88,7 @@ function html() {
             return JSON.parse(fs.readFileSync('app/templates/data/data.json'));
         }))
       .pipe(pug({
-        "pretty": isDev /* for desable html minify*/
+        "pretty": true
       }))
       .pipe(gulpif(isDev, dest('app/'), dest('dist/')))
       .pipe(browserSync.reload({stream: true}));
@@ -103,7 +102,6 @@ function moveScripts() {
 
 function moveImages() {
   return src('app/images/**/*')
-  .pipe(imagemin())
   .pipe(dest('dist/images/'));
 }
 

@@ -1,23 +1,7 @@
-@function vw($px, $screenWeedth: 1280) {
-  @return $px * 100 / $screenWeedth + vw;
+@function vw($px, $screenWidth: 1280) {
+  @return calc($px * 100 / $screenWidth) + vw;
 }
 
 @function vh($px, $screenHeight: 720) {
-  @return $px * 100 / $screenHeight + vh;
-}
-
-@function cvh($px, $convertedScreen: 1080, $convertTo: 720) {
-  @return ($px * $convertTo) / $convertedScreen;
-}
-
-@function cvhp($px, $convertedScreen: 1080, $convertTo: 720) {
-  @return ($px * $convertTo) / $convertedScreen + px;
-}
-
-@function cv($px, $convertedScreen: 1920, $convertTo: 1280) {
-  @return ($px * $convertTo) / $convertedScreen;
-}
-
-@function cvp($px, $convertedScreen: 1920, $convertTo: 1280) {
-  @return ($px * $convertTo) / $convertedScreen + px;
+  @return calc($px * 100 / $screenHeight) + vh;
 }
