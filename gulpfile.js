@@ -21,14 +21,14 @@ const isProd = !isDev
 function initServer() {
   browserSync.init({
     server: {
-        baseDir: "./app"
+        baseDir: "./sources"
       }
   });
 
-	watch(['app/scss/**/*.scss'], styles);
-  watch(['app/templates/**/*.pug'], html);
-	watch('app/scripts/**/*.js', scripts);
-  watch('app/images/**/*').on('change', browserSync.reload);
+	watch(['sources/scss/**/*.scss'], styles);
+  watch(['sources/templates/**/*.pug'], html);
+	watch('sources/scripts/**/*.js', scripts);
+  watch('sources/images/**/*').on('change', browserSync.reload);
 }
 
 function styles() {
@@ -40,7 +40,7 @@ function styles() {
     plugins.push(cssnano());
   }
 
-  return src('app/scss/**/*.scss')
+  return src('sources/scss/**/*.scss')
     .pipe(gulpif(isDev, sourcemaps.init()))
     .pipe(plumber({
         errorHandler: notify.onError(function(err) {
@@ -53,29 +53,29 @@ function styles() {
     .pipe(scss())
     .pipe(postcss(plugins))
     .pipe(gulpif(isDev, sourcemaps.write()))
-    .pipe(gulpif(isDev, dest('app/styles/'), dest('dist/styles/')))
+    .pipe(gulpif(isDev, dest('sources/styles/'), dest('dist/styles/')))
     .pipe(browserSync.reload({stream: true}));
 }
 
 function scripts() {
-  fs.truncate('app/scripts/bundle.min.js', 0, function() {
+  fs.truncate('sources/scripts/bundle.min.js', 0, function() {
     console.log('bundle.min.js removed');
   });
 
-  return src("app/scripts/**/*.js")
+  return src("sources/scripts/**/*.js")
     .pipe(order([
       "vendor/jquery/jquery.min.js",
       "vendor/**/*.js",
-      "app/**/template.js",
-      "app/**/*.js"
+      "sources/**/template.js",
+      "sources/**/*.js"
     ]))
     .pipe(concat("bundle.min.js"))
-    .pipe(dest("app/js"))
+    .pipe(dest("sources/js"))
     .pipe(browserSync.reload({stream: true}));
 }
 
 function html() {
-  return src('app/templates/views/*.pug')
+  return src('sources/templates/views/*.pug')
        .pipe(plumber({
            errorHandler: notify.onError(function(err) {
                return {
@@ -85,28 +85,28 @@ function html() {
            })
        }))
       .pipe(data(function(file) {
-            return JSON.parse(fs.readFileSync('app/templates/data/data.json'));
+            return JSON.parse(fs.readFileSync('sources/templates/data/data.json'));
         }))
       .pipe(pug({
         "pretty": true
       }))
-      .pipe(gulpif(isDev, dest('app/'), dest('dist/')))
+      .pipe(gulpif(isDev, dest('sources/'), dest('dist/')))
       .pipe(browserSync.reload({stream: true}));
 }
 
 function moveScripts() {
-  return src('app/js/**/*.js')
+  return src('sources/js/**/*.js')
   .pipe(uglify())
   .pipe(dest('dist/js/'));
 }
 
 function moveImages() {
-  return src('app/images/**/*')
+  return src('sources/images/**/*')
   .pipe(dest('dist/images/'));
 }
 
 function moveFonts() {
-  return src('app/fonts/**/*')
+  return src('sources/fonts/**/*')
   .pipe(dest('dist/fonts/'));
 }
 

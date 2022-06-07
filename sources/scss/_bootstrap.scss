@@ -1,0 +1,34 @@
+@use "sass:map";
+@import "./../../node_modules/bootstrap/scss/functions";
+
+$grid-breakpoints: (
+  xs: 0,
+  sm: 576px,
+  md: 768px,
+  lg: 992px,
+  xl: 1200px,
+  xxl: 1400px
+);
+
+$container-max-widths: (
+  sm: 540px,
+  md: 720px,
+  lg: 960px,
+  xl: 1140px,
+  xxl: 1320px
+);
+
+@import "./../../node_modules/bootstrap/scss/variables";
+@import "./../../node_modules/bootstrap/scss/mixins";
+@import "./../../node_modules/bootstrap/scss/utilities";
+@import "./../../node_modules/bootstrap/scss/containers";
+@import "./../../node_modules/bootstrap/scss/grid";
+@import "./../../node_modules/bootstrap/scss/helpers";
+@import "./../../node_modules/bootstrap/scss/utilities/api";
+
+// breackpoints
+$sm-breackpoint: map.get($grid-breakpoints, 'sm') - 1;
+$md-breackpoint: map.get($grid-breakpoints, 'md') - 1;
+$lg-breackpoint: map.get($grid-breakpoints, 'lg') - 1;
+$xl-breackpoint: map.get($grid-breakpoints, 'xl') - 1;
+$xxl-breackpoint: map.get($grid-breakpoints, 'xxl') - 1;

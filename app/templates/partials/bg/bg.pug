@@ -1,7 +1,0 @@
-mixin bg(src, classes, isLazy)
-  if isLazy
-    .bg.lazyload(class=classes data-src= src)
-      block 
-  else
-    .bg(class=classes style='background-image: url(' + src + ')')&attributes(attributes)
-      block     
