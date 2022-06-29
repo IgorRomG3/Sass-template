@@ -1,7 +1,7 @@
 node_modules/
-app/css/
-app/js/
-app/*.html
+sources/css/
+sources/js/
+sources/*.html
 dist/
 .DS_Store
 .idea
