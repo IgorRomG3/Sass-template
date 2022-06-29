@@ -1,9 +1,10 @@
 //home.js
 
 (function () {
-	$(document).ready(function(){
-		initPage();
-	});
+
+  window.addEventListener('load', () => {
+    initPage();
+  })
 
   function initPage() {
     console.log('home.js');
